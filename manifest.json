@@ -1,0 +1,11 @@
+{
+  "name": "TikFut",
+  "short_name": "TikFut",
+  "start_url": "/tikfut.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#39ff14",
+  "icons": []
+}
+
+

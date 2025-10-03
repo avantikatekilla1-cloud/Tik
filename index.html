@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="0; url=tikfut.html">
+  <title>Redirecionando…</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#39ff14">
+  <style>
+    html,body{height:100%;margin:0;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;background:#000;color:#fff}
+    a{color:#39ff14}
+  </style>
+  <script>
+    // Redireciona via JS também (fallback)
+    window.location.replace('tikfut.html');
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    }
+  </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=tikfut.html">
+  </noscript>
+</head>
+<body>
+  <p>Redirecionando para o jogo… Se não acontecer automaticamente, <a href="tikfut.html">clique aqui</a>.</p>
+</body>
+</html>
+
+
