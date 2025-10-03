@@ -524,6 +524,17 @@
     .lista-times-lateral { display: none !important; }
     /* Esconder botões flutuantes (campeão e hino) */
     #btnMostrarCampeao, #btnModoHino { display: none !important; }
+    /* Botão ponto para resetar gols */
+    .reset-dot {
+      display: block;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      color: #fff;
+      text-shadow: 0 0 6px #000a;
+    }
   </style>
 </head>
 
@@ -635,6 +646,7 @@
         </div>
       </div>
     </div>
+    <div id="reset-dot" class="reset-dot" title="Zerar gols">.</div>
   </div>
   <div class="lista-times-lateral" id="listaTimesLateral">
     <h3>Adicionar novo time</h3>
@@ -1194,6 +1206,19 @@
       atualizarOrdemTimes();
       salvarTabelaNoStorage();
     };
+    // Botão ponto (.) para resetar gols sem confirmação
+    (function(){
+      const resetDot = document.getElementById('reset-dot');
+      if (resetDot) {
+        resetDot.addEventListener('click', function(){
+          document.querySelectorAll('.team-row .gols').forEach(function(golsSpan){
+            golsSpan.textContent = utils.formatarGols(0);
+          });
+          atualizarOrdemTimes();
+          salvarTabelaNoStorage();
+        });
+      }
+    })();
     // Função para adicionar gols ao time específico do input
     function adicionarGolsPresente(presente, inputId) {
       const valor = parseInt(document.getElementById(inputId).value, 10) || 0;
