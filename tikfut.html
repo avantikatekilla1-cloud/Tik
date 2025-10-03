@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>TikFut - Ranking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#39ff14">
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Rhesmanisa&display=swap" rel="stylesheet">
+  <style>
+    /* Reset e configurações base */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: url('gif/drible.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Container principal */
+    .ranking-container,
+    .header-tikfut {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .ranking-container {
+      margin-bottom: 40px;
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+      padding: 24px 0;
+    }
+
+    .header-tikfut {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 0;
+      top: 0;
+    }
+
+    /* Linhas dos times */
+    .team-row {
+      display: flex;
+      align-items: center;
+      margin: 18px 0;
+      padding: 10px 18px;
+      border-radius: 16px;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    /* Posições especiais */
+    .team-row.primeiro .escudo {
+      border-color: #ffe066;
+      box-shadow: 0 0 12px #ffe06688;
+    }
+
+    .team-row.segundo .escudo {
+      border-color: #bfc1c2;
+      box-shadow: 0 0 12px #bfc1c288;
+    }
+
+    .team-row.terceiro .escudo {
+      border-color: #cd7f32;
+      box-shadow: 0 0 12px #cd7f3288;
+    }
+
+    .team-row.vermelho {
+      background: #c00;
+    }
+
+    .team-row.borda-branca {
+      border: 3px solid #fff;
+    }
+
+    /* Escudos */
+    .escudo {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid transparent;
+      margin-right: 16px;
+    }
+
+    .escudo.escudo-borda-branca {
+      border-color: #fff !important;
+      box-shadow: 0 0 12px #fff8 !important;
+    }
+
+    /* Posição do time */
+    .posicao-time {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #fff;
+      background: #333;
+      border-radius: 50%;
+      margin-right: 12px;
+      border: 2px solid #222;
+      box-shadow: 0 2px 8px #0004;
+    }
+
+    .trofeu-posicao {
+      width: 28px;
+      height: 28px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Informações do time */
+    .team-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .team-nome {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #39ff14;
+      margin-bottom: 4px;
+      text-shadow: 0 0 4px #000a;
+    }
+
+    .presente-time {
+      width: 35px;
+      height: 35Px;
+      object-fit: contain;
+      margin-left: -40px;
+      z-index: 0;
+   position: absolute;
+   display: none;
+    /* AOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO */
+   
+    }
+
+    /* Gols */
+    .gols-row {
+      display: flex;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .coin {
+      width: 22px;
+      height: 22px;
+      margin-right: 7px;
+      vertical-align: middle;
+    }
+
+    .gols {
+      color: #ffe066;
+      font-size: 1.1em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 0 0 4px #000a;
+    }
+
+    /* Logo e título */
+    .logo-tiktok {
+      width: 38px;
+      height: 38px;
+      margin-right: 4px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .tiktok-nome,
+    .tikfut-ano {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #fff;
+      letter-spacing: 1px;
+      text-shadow: 0 0 6px #000a;
+    }
+
+    .tiktok-nome {
+      margin-right: 18px;
+    }
+
+    .tikfut-ano {
+      align-self: center;
+      margin-left: 2px;
+    }
+
+
+
+    /* Lista lateral */
+    .lista-times-lateral {
+      position: fixed;
+      top: 60px;
+      right: 32px;
+      width: 220px;
+      border-radius: 16px;
+      padding: 18px 12px;
+      z-index: 10;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lista-times-lateral h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.1em;
+      color: #ffe066;
+      text-align: center;
+    }
+
+    .lista-times-select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+      background: #222;
+      color: #fff;
+    }
+
+    .escudo-preview {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 8px;
+      vertical-align: middle;
+      border: 2px solid #ffe06644;
+      background: #222;
+    }
+
+    .option-escudo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lista-times-lateral button {
+      width: 100%;
+      padding: 8px 0;
+      border-radius: 8px;
+      border: none;
+      background: #7dff66;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .lista-times-lateral button:hover {
+      background: #fff700;
+    }
+
+    /* Botões flutuantes */
+    .btn-flutuante {
+      position: fixed;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 1.5em;
+      box-shadow: 0 2px 12px #0008;
+      cursor: pointer;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+    }
+
+    #btnMostrarCampeao {
+      bottom: 32px;
+      right: 32px;
+      background: #39ff14;
+      color: #111;
+    }
+
+    #btnModoHino {
+      bottom: 100px;
+      right: 32px;
+      background: #222;
+      color: #39ff14;
+    }
+
+
+    /* Modais */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.92);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-campeao {
+      z-index: 1000;
+    }
+
+    .modal-video {
+      z-index: 2000;
+    }
+
+    .btn-fechar {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #c00;
+      color: #fff;
+      font-size: 2em;
+      font-weight: bold;
+      box-shadow: 0 2px 12px #0008;
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+    }
+
+    .modal-video .btn-fechar {
+      z-index: 2100;
+    }
+
+    /* Conteúdo dos modais */
+    .modal-campeao img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 18px;
+    }
+
+    .modal-campeao .nome-campeao {
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 8px #39ff14;
+      margin-bottom: 8px;
+    }
+
+    .modal-campeao .titulo-campeao {
+      font-size: 2em;
+      font-weight: bold;
+      color: #ffe066;
+      text-shadow: 0 0 8px #000;
+      margin-bottom: 18px;
+    }
+
+    #video-time {
+      max-width: 90vw;
+      max-height: 80vh;
+      background: #000;
+      z-index: 2002;
+      border-radius: 18px;
+      box-shadow: 0 2px 24px #000a;
+    }
+
+    .nome-time-video {
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 8px #39ff14;
+      margin-top: 18px;
+    }
+
+    /* Inputs de presentes */
+    .inputs-presentes {
+      width: 100%;
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-presente {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .input-presente img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .input-presente input {
+      width: 48px;
+    }
+
+    .input-presente button {
+      flex: 1;
+    }
+
+    .btn-video {
+      margin-left: 4px;
+    }
+
+    /* Texto extra dos presentes */
+    .texto-presente-extra {
+      margin-left: 12px;
+      display: inline-block;
+      font-size: 0.95em;
+      color: #b366ff;
+      font-weight: bold;
+      position: relative;
+      top: 8px;
+      font-family: 'Rhesmanisa', cursive;
+    }
+
+    /* Banner de regra das moedas */
+    .banner-regra-moedas {
+      display: none;
+      background: linear-gradient(135deg, #ffe066, #ffd700);
+      color: #000;
+      text-align: center;
+      padding: 12px 20px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(255, 224, 102, 0.4);
+      border: 3px solid #fff;
+      max-width: 300px;
+      margin: 0 auto 20px auto;
+      position: relative;
+      overflow: hidden;
+      font-weight: bold;
+      font-size: 1.2em;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .banner-regra-moedas::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Banner Brasileirão */
+    .banner-brasileirao {
+      background: #0dff00;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border: 2px solid #ffe066;
+      max-width: 250px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    .banner-brasileirao h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .banner-brasileirao .ano {
+      font-size: 5px;
+      color: #ffe066;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      margin-top: 5px;
+      position: relative;
+      z-index: 1;
+    }
+    .br-banner-regra-moedas {
+      font-size: 15px;
+      margin: -10px; 
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ranking-container">
+    <div class="header-tikfut">
+    </div>
+
+    <!-- Banner de regra das moedas -->
+    <div class="banner-regra-moedas">
+      🪙 1 coin = 1 Gol ⚽ <p class="br-banner-regra-moedas"><br>Nome do time no chat</p> 
+    </div>
+
+    <!-- Banner Brasileirão 2025 -->
+  
+
+    <div class="team-row primeiro" id="palmeiras-row">
+      <span class="posicao-time"><img src="outros/trofeu.png" alt="Troféu" class="trofeu-posicao"></span>
+      <img class="escudo" src="escudos/palmeiras.png" alt="Palmeiras">
+      <div class="team-info">
+        <span class="team-nome">Palmeiras <img class="presente-time" src="presentes/branca.webp"
+            alt="Presente Branca"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-palmeiras">137 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row segundo" id="flamengo-row">
+      <span class="posicao-time">2</span>
+      <img class="escudo" src="escudos/flamengo.png" alt="Flamengo">
+      <div class="team-info">
+        <span class="team-nome">Flamengo <img class="presente-time" src="presentes/gg.webp" alt="Presente GG"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-flamengo">133 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row terceiro" id="corinthians-row">
+      <span class="posicao-time">3</span>
+      <img class="escudo" src="escudos/corinthians.png" alt="Corinthians">
+      <div class="team-info">
+        <span class="team-nome">Corinthians <img class="presente-time" src="presentes/casquinha.webp"
+            alt="Presente Casquinha"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-corinthians">98 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row" id="santos-row">
+      <span class="posicao-time">4</span>
+      <img class="escudo escudo-borda-branca" src="escudos/santos.png" alt="Santos">
+      <div class="team-info">
+        <span class="team-nome">Santos <img class="presente-time" src="presentes/rosa.webp" alt="Presente Rosa"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-santos">45 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row" id="gremio-row">
+      <span class="posicao-time">5</span>
+      <img class="escudo escudo-borda-branca" src="escudos/gremio.png" alt="Grêmio">
+      <div class="team-info">
+        <span class="team-nome">Grêmio <img class="presente-time" src="presentes/tiktok.webp"
+            alt="Presente TikTok"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-gremio">32 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row" id="sao-paulo-row">
+      <span class="posicao-time">6</span>
+      <img class="escudo" src="escudos/sao-paulo.png" alt="São Paulo">
+      <div class="team-info">
+        <span class="team-nome">São Paulo <img class="presente-time" src="presentes/rosquinha.webp"
+            alt="Presente Rosquinha"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-sao-paulo">28 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row" id="fluminense-row">
+      <span class="posicao-time">7</span>
+      <img class="escudo" src="escudos/fluminense.png" alt="Fluminense">
+      <div class="team-info">
+        <span class="team-nome">Fluminense <img class="presente-time" src="outros/verde.webp"
+            alt="Presente Verde"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-fluminense">25 Moedas</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-row vermelho" id="botafogo-row">
+      <span class="posicao-time">8</span>
+      <img class="escudo" src="escudos/botafogo.png" alt="Botafogo">
+      <div class="team-info">
+        <span class="team-nome">Botafogo <img class="presente-time" src="presentes/rosquinha.webp"
+            alt="Presente Rosquinha"></span>
+        <div class="gols-row">
+          <img class="coin" src="outros/coin.png" alt="Moeda">
+          <span class="gols" id="gols-botafogo">20 Moedas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lista-times-lateral" id="listaTimesLateral">
+    <h3>Adicionar novo time</h3>
+    <select class="lista-times-select" id="selectTimeNovo">
+      <!-- opções geradas por JS -->
+    </select>
+    <button id="btnSubstituirUltimo">Substituir 8º time</button>
+    <button id="btnResetarGols" style="background:#c00;color:#fff;margin-top:8px;">Resetar gols</button>
+    <div id="inputsPresentes" class="inputs-presentes">
+      <div class="input-presente">
+        <img src="escudos/corinthians.png" alt="Corinthians">
+        <input type="number" min="1" value="1" id="input-casquinha">
+        <button id="btn-casquinha">Adicionar</button>
+        <button id="btn-video-casquinha" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/santos.png" alt="Santos">
+        <input type="number" min="1" value="1" id="input-rosa">
+        <button id="btn-rosa">Adicionar</button>
+        <button id="btn-video-rosa" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/palmeiras.png" alt="Palmeiras">
+        <input type="number" min="1" value="1" id="input-branca">
+        <button id="btn-branca">Adicionar</button>
+        <button id="btn-video-branca" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/gremio.png" alt="Grêmio">
+        <input type="number" min="1" value="1" id="input-tiktok">
+        <button id="btn-tiktok">Adicionar</button>
+        <button id="btn-video-tiktok" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/flamengo.png" alt="Flamengo">
+        <input type="number" min="1" value="1" id="input-gg">
+        <button id="btn-gg">Adicionar</button>
+        <button id="btn-video-gg" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/sao-paulo.png" alt="São Paulo">
+        <input type="number" min="1" value="1" id="input-rosquinha">
+        <button id="btn-rosquinha">Adicionar</button>
+        <button id="btn-video-rosquinha" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/fluminense.png" alt="Fluminense">
+        <input type="number" min="1" value="1" id="input-verde">
+        <button id="btn-verde">Adicionar</button>
+        <button id="btn-video-verde" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+      <div class="input-presente">
+        <img src="escudos/botafogo.png" alt="Botafogo">
+        <input type="number" min="1" value="1" id="input-rosquinha2">
+        <button id="btn-rosquinha2">Adicionar</button>
+        <button id="btn-video-rosquinha2" title="Ver vídeo do time" class="btn-video">▶️</button>
+      </div>
+    </div>
+  </div>
+
+  <button id="btnMostrarCampeao" class="btn-flutuante">🏆</button>
+  <button id="btnModoHino" class="btn-flutuante">🎵</button>
+  <audio id="audio-hino-modo"></audio>
+
+  <div id="modal-campeao" class="modal modal-campeao">
+    <img src="gif/fogos1.gif"
+      style="position:absolute;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:1001;pointer-events:none;">
+    <div
+      style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:40px;z-index:1002;position:relative;">
+      <img id="escudo-campeao" src="" alt="Escudo Campeão" class="modal-campeao">
+      <div id="nome-campeao" class="nome-campeao"></div>
+      <div class="titulo-campeao">Campeão</div>
+      <button id="fechar-campeao" class="btn-fechar">✖</button>
+      <audio id="audio-hino-campeao"></audio>
+    </div>
+  </div>
+
+  <div id="modal-video-time" class="modal modal-video">
+    <button id="fechar-video-time" class="btn-fechar">✖</button>
+    <video id="video-time" controls></video>
+    <div id="nome-time-video" class="nome-time-video"></div>
+  </div>
+  <script>
+    // Mapeamento: tecla -> id do span de gols (inicial, mas será sobrescrito dinamicamente)
+    const teclaParaTime = {};
+
+    // Configurações e constantes
+    const CONFIG = {
+      ANIMACAO_DURACAO: 400,
+      GOLS_PADRAO: 30
+    };
+
+    // Funções utilitárias
+    const utils = {
+      extrairGols: (texto) => parseInt(texto.replace(' Moedas', ''), 10),
+      formatarGols: (gols) => `${gols} Moedas`,
+      normalizarNome: (nome) => nome.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g, '').replace(/ /g, '-'),
+      criarElemento: (tag, className, id) => {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (id) el.id = id;
+        return el;
+      }
+    };
+
+    function atualizarOrdemTimes() {
+      salvarTabelaNoStorage();
+      const container = document.querySelector('.ranking-container');
+      const rows = Array.from(container.querySelectorAll('.team-row'));
+      const ordemAntiga = rows.map(row => row.id);
+
+      // Ordena por gols
+      rows.sort((a, b) => {
+        const golsA = utils.extrairGols(a.querySelector('.gols').textContent);
+        const golsB = utils.extrairGols(b.querySelector('.gols').textContent);
+        return golsB - golsA;
+      });
+
+      // Atualiza posições e classes
+      rows.forEach((row, idx) => {
+        row.classList.remove('primeiro', 'segundo', 'terceiro', 'vermelho');
+
+        if (idx === 0) row.classList.add('primeiro');
+        else if (idx === 1) row.classList.add('segundo');
+        else if (idx === 2) row.classList.add('terceiro');
+        if (idx === rows.length - 1) row.classList.add('vermelho');
+
+        // Atualiza posição
+        const pos = row.querySelector('.posicao-time');
+        if (pos) {
+          pos.innerHTML = idx === 0
+            ? '<img src="outros/trofeu.png" alt="Troféu" class="trofeu-posicao">'
+            : (idx + 1).toString();
+        }
+      });
+
+      // Efeito de ultrapassagem
+      const novaOrdem = rows.map(row => row.id);
+      novaOrdem.forEach((id, idx) => {
+        const idxAntigo = ordemAntiga.indexOf(id);
+        if (idxAntigo > idx) {
+          const row = document.getElementById(id);
+          if (row) {
+            row.style.background = '#39ff14';
+            setTimeout(() => row.style.background = '', CONFIG.ANIMACAO_DURACAO);
+          }
+        }
+      });
+
+      // Reanexa na ordem correta
+      rows.forEach(row => container.appendChild(row));
+    }
+
+    // Função para salvar alterações
+    function salvarAoAlterar() {
+      salvarTabelaNoStorage();
+    }
+
+    // Função para criar times padrão
+    function criarTimesPadrao() {
+      console.log('Criando times padrão...');
+      const timesPadrao = [
+        { nome: 'Palmeiras', escudo: 'palmeiras.png', gols: 137, presente: 'branca.webp' },
+        { nome: 'Flamengo', escudo: 'flamengo.png', gols: 133, presente: 'gg.webp' },
+        { nome: 'Corinthians', escudo: 'corinthians.png', gols: 98, presente: 'casquinha.webp' },
+        { nome: 'Santos', escudo: 'santos.png', gols: 45, presente: 'rosa.webp' },
+        { nome: 'Grêmio', escudo: 'gremio.png', gols: 32, presente: 'tiktok.webp' },
+        { nome: 'São Paulo', escudo: 'sao-paulo.png', gols: 28, presente: 'rosquinha.webp' },
+        { nome: 'Fluminense', escudo: 'fluminense.png', gols: 25, presente: 'verde.webp' },
+        { nome: 'Botafogo', escudo: 'botafogo.png', gols: 20, presente: 'rosquinha.webp' }
+      ];
+
+      const container = document.querySelector('.ranking-container');
+      console.log('Container encontrado:', container);
+
+      // Remove times existentes apenas se não houver 8 times
+      const timesExistentes = container.querySelectorAll('.team-row');
+      if (timesExistentes.length < 8) {
+        timesExistentes.forEach(row => row.remove());
+      } else {
+        console.log('Já existem 8 times, não removendo...');
+        return;
+      }
+
+      timesPadrao.forEach((time, idx) => {
+        console.log('Criando time:', time.nome);
+        const row = utils.criarElemento('div', 'team-row', utils.normalizarNome(time.nome) + '-row');
+
+        // Posição
+        const pos = utils.criarElemento('span', 'posicao-time');
+        pos.innerHTML = idx === 0
+          ? '<img src="outros/trofeu.png" alt="Troféu" class="trofeu-posicao">'
+          : (idx + 1).toString();
+
+        // Escudo
+        const escudo = utils.criarElemento('img', 'escudo');
+        escudo.src = `escudos/${time.escudo}`;
+        escudo.alt = time.nome;
+
+        // Informações do time
+        const teamInfo = utils.criarElemento('div', 'team-info');
+        const teamNome = utils.criarElemento('span', 'team-nome');
+        teamNome.textContent = time.nome + ' ';
+
+        const presente = utils.criarElemento('img', 'presente-time');
+        presente.src = `presentes/${time.presente}`;
+        presente.alt = `Presente ${time.presente.replace('.webp', '')}`;
+        teamNome.appendChild(presente);
+        teamInfo.appendChild(teamNome);
+
+        // Gols
+        const golsRow = utils.criarElemento('div', 'gols-row');
+        const coin = utils.criarElemento('img', 'coin');
+        coin.src = 'outros/coin.png';
+        coin.alt = 'Moeda';
+        golsRow.appendChild(coin);
+
+        const gols = utils.criarElemento('span', 'gols', `gols-${utils.normalizarNome(time.nome)}`);
+        gols.textContent = utils.formatarGols(time.gols);
+        golsRow.appendChild(gols);
+        teamInfo.appendChild(golsRow);
+
+        row.appendChild(pos);
+        row.appendChild(escudo);
+        row.appendChild(teamInfo);
+        container.appendChild(row);
+        console.log('Time criado e adicionado:', time.nome);
+      });
+
+      console.log('Todos os times criados. Total:', container.querySelectorAll('.team-row').length);
+      atualizarOrdemTimes();
+      atualizarTeclasTimes();
+      sincronizarFotosInputs();
+      adicionarEventosCliqueEscudos();
+      adicionarEventosCliqueMoedas();
+      salvarTabelaNoStorage();
+    }
+
+    document.addEventListener('keydown', function (e) {
+      const key = e.key.toLowerCase();
+      if (teclaParaTime[key]) {
+        const golsSpan = document.getElementById(teclaParaTime[key]);
+        if (golsSpan) {
+          const gols = utils.extrairGols(golsSpan.textContent);
+          golsSpan.textContent = utils.formatarGols(gols + 1);
+        }
+
+        atualizarOrdemTimes();
+        salvarAoAlterar();
+      }
+    });
+
+    // Lista de times da pasta escudos
+    const listaTimesEscudos = [
+      "atletico-go.png", "atletico-mg.png", "bahia.png","botafogo.png", "bragantino.png", "ceara.png", "corinthians.png",
+      "coritiba.png", "criciuma.png", "cruzeiro.png", "cuiaba.png", "CRB.png", "flamengo.png", "fluminense.png",
+      "fortaleza.png", "gremio.png", "internacional.png", "Juventude.png","mirassol.png", "palmeiras.png", "santos.png",
+      "sao-paulo.png", "sport.png", "vasco.png", "vitoria.png"
+    ];
+    // Função para formatar nome do time a partir do arquivo
+    function nomeTimeFromFile(file) {
+      const nome = file.replace('.png', '').replace(/-/g, ' ');
+      return nome === 'juventude' ? 'Juventude' : nome.replace(/\b\w/g, l => l.toUpperCase());
+    }
+    // Preencher select
+    const selectTimeNovo = document.getElementById('selectTimeNovo');
+    listaTimesEscudos.forEach(file => {
+      const opt = document.createElement('option');
+      opt.value = file;
+      opt.innerHTML = `<img src='escudos/${file}' class='escudo-preview'> ${nomeTimeFromFile(file)}`;
+      opt.textContent = nomeTimeFromFile(file);
+      selectTimeNovo.appendChild(opt);
+    });
+    // Função para trocar automaticamente o último time
+    function trocarUltimoTimeAutomaticamente() {
+      // Obter todos os times disponíveis
+      const todosOsTimes = listaTimesEscudos;
+      
+      // Obter times que estão jogando atualmente
+      const timesJogando = Array.from(document.querySelectorAll('.team-row')).map(row => {
+        const escudo = row.querySelector('.escudo');
+        return escudo.src.split('/').pop();
+      });
+      
+      // Filtrar times que não estão jogando
+      const timesDisponiveis = todosOsTimes.filter(time => !timesJogando.includes(time));
+      
+      if (timesDisponiveis.length === 0) {
+        console.log('Todos os times estão jogando, não há times para trocar');
+        return;
+      }
+      
+      // Escolher um time aleatório dos disponíveis
+      const timeAleatorio = timesDisponiveis[Math.floor(Math.random() * timesDisponiveis.length)];
+      const nomeTime = nomeTimeFromFile(timeAleatorio);
+      
+      console.log(`Trocando automaticamente o último time por: ${nomeTime}`);
+      
+      // Simular a seleção no dropdown
+      const selectTimeNovo = document.getElementById('selectTimeNovo');
+      selectTimeNovo.value = timeAleatorio;
+      
+      // Executar a troca
+      const file = timeAleatorio;
+      const nome = nomeTime;
+      
+      // Seleciona o último time (8º colocado)
+      const container = document.querySelector('.ranking-container');
+      const rows = Array.from(container.querySelectorAll('.team-row'));
+      if (rows.length === 0) return;
+      const ultimo = rows[rows.length - 1];
+      
+      // Atualiza escudo
+      const escudo = ultimo.querySelector('.escudo');
+      escudo.src = `escudos/${file}`;
+      escudo.alt = nome;
+      
+      // Atualiza nome
+      const nomeSpan = ultimo.querySelector('.team-nome');
+      nomeSpan.childNodes[0].textContent = nome + ' ';
+      
+      // Mantém o presente atual
+      // Atualiza gols
+      const golsSpan = ultimo.querySelector('.gols');
+      golsSpan.textContent = '0 Moedas';
+      // Remove animação de gol
+      golsSpan.classList.remove('gol-anim');
+      // Atualiza id do gols
+      golsSpan.id = 'gols-' + nome.toLowerCase().replace(/ /g, '-');
+      // Atualiza id da row
+      ultimo.id = nome.toLowerCase().replace(/ /g, '-') + '-row';
+      
+      // Reordena
+      atualizarOrdemTimes();
+      atualizarTeclasTimes();
+      sincronizarFotosInputs();
+      adicionarEventosCliqueEscudos();
+      adicionarEventosCliqueMoedas();
+      salvarAoAlterar();
+    }
+
+    // Função para sincronizar fotos dos inputs com os times atuais
+    function sincronizarFotosInputs() {
+      // Mapear cada input específico para o time correto baseado no presente
+      const inputParaTime = {
+        'input-casquinha': 'casquinha.webp',
+        'input-rosa': 'rosa.webp', 
+        'input-branca': 'branca.webp',
+        'input-tiktok': 'tiktok.webp',
+        'input-gg': 'gg.webp',
+        'input-rosquinha': 'rosquinha.webp',
+        'input-verde': 'verde.webp',
+        'input-rosquinha2': 'rosquinha.webp'
+      };
+      
+      // Para cada input, encontrar o time correspondente
+      Object.keys(inputParaTime).forEach(inputId => {
+        const presente = inputParaTime[inputId];
+        const input = document.getElementById(inputId);
+        
+        if (input) {
+          // Encontrar todos os times que têm este presente
+          const timesComPresente = Array.from(document.querySelectorAll('.team-row')).filter(row => {
+            const presenteImg = row.querySelector('.presente-time');
+            return presenteImg && presenteImg.src.includes(presente);
+          });
+          
+          let timeRow;
+          
+          // Se há múltiplos times com o mesmo presente, usar regras específicas
+          if (timesComPresente.length > 1) {
+            if (inputId === 'input-rosquinha') {
+              // Primeiro input rosquinha pega o primeiro time com rosquinha
+              timeRow = timesComPresente[0];
+            } else if (inputId === 'input-rosquinha2') {
+              // Segundo input rosquinha pega o último time com rosquinha (que é o substituído)
+              timeRow = timesComPresente[timesComPresente.length - 1];
+            } else {
+              timeRow = timesComPresente[0];
+            }
+          } else {
+            timeRow = timesComPresente[0];
+          }
+          
+          if (timeRow) {
+            const escudo = timeRow.querySelector('.escudo');
+            const nomeTime = timeRow.querySelector('.team-nome').childNodes[0].textContent.trim();
+            const inputImg = input.parentElement.querySelector('img');
+            
+            if (inputImg) {
+              inputImg.src = escudo.src;
+              inputImg.alt = nomeTime;
+            }
+          }
+        }
+      });
+    }
+    function atualizarTeclasTimes() {
+      const presenteParaTecla = {
+        'casquinha.webp': 'v',
+        'rosa.webp': 'z',
+        'branca.webp': 'f',
+        'tiktok.webp': 'c',
+        'gg.webp': 's'
+      };
+
+      Object.keys(teclaParaTime).forEach(k => delete teclaParaTime[k]);
+
+      document.querySelectorAll('.team-row').forEach(row => {
+        const presenteImg = row.querySelector('.presente-time');
+        if (!presenteImg) return;
+
+        const presente = presenteImg.src.split('/').pop();
+        const tecla = presenteParaTecla[presente];
+        if (tecla) {
+          const golsSpan = row.querySelector('.gols');
+          teclaParaTime[tecla] = golsSpan.id;
+        }
+      });
+    }
+
+    // Função para salvar o estado da tabela no localStorage
+    function salvarTabelaNoStorage() {
+      const times = Array.from(document.querySelectorAll('.team-row')).map(row => ({
+        nome: row.querySelector('.team-nome').childNodes[0].textContent.trim(),
+        escudo: row.querySelector('.escudo').src.split('/').pop(),
+        gols: utils.extrairGols(row.querySelector('.gols').textContent),
+        presente: row.querySelector('.presente-time').src.split('/').pop()
+      }));
+      
+      // Salvar também as fotos dos inputs
+      const fotosInputs = {};
+      document.querySelectorAll('.input-presente').forEach(inputDiv => {
+        const img = inputDiv.querySelector('img');
+        const input = inputDiv.querySelector('input');
+        if (img && input) {
+          fotosInputs[input.id] = {
+            src: img.src.split('/').pop(),
+            alt: img.alt
+          };
+        }
+      });
+      
+      localStorage.setItem('tikfut_tabela', JSON.stringify(times));
+      localStorage.setItem('tikfut_fotos_inputs', JSON.stringify(fotosInputs));
+    }
+
+    // Função para restaurar a tabela do localStorage
+    function restaurarTabelaDoStorage() {
+      const data = localStorage.getItem('tikfut_tabela');
+      if (!data) return;
+
+      const times = JSON.parse(data);
+      const container = document.querySelector('.ranking-container');
+
+      // Remove times existentes
+      container.querySelectorAll('.team-row').forEach(row => row.remove());
+
+      // Cria novos times
+      times.forEach((time, idx) => {
+        const row = utils.criarElemento('div', 'team-row', utils.normalizarNome(time.nome) + '-row');
+
+        // Posição
+        const pos = utils.criarElemento('span', 'posicao-time');
+        pos.innerHTML = idx === 0
+          ? '<img src="outros/trofeu.png" alt="Troféu" class="trofeu-posicao">'
+          : (idx + 1).toString();
+
+        // Escudo
+        const escudo = utils.criarElemento('img', 'escudo');
+        escudo.src = `escudos/${time.escudo}`;
+        escudo.alt = time.nome;
+
+        // Informações do time
+        const teamInfo = utils.criarElemento('div', 'team-info');
+        const teamNome = utils.criarElemento('span', 'team-nome');
+        teamNome.textContent = time.nome + ' ';
+
+        const presente = utils.criarElemento('img', 'presente-time');
+        presente.src = `presentes/${time.presente}`;
+        presente.alt = `Presente ${time.presente.replace('.webp', '')}`;
+        teamNome.appendChild(presente);
+        teamInfo.appendChild(teamNome);
+
+        // Gols
+        const golsRow = utils.criarElemento('div', 'gols-row');
+        const coin = utils.criarElemento('img', 'coin');
+        coin.src = 'outros/coin.png';
+        coin.alt = 'Moeda';
+        golsRow.appendChild(coin);
+
+        const gols = utils.criarElemento('span', 'gols', `gols-${utils.normalizarNome(time.nome)}`);
+        gols.textContent = utils.formatarGols(time.gols);
+        golsRow.appendChild(gols);
+        teamInfo.appendChild(golsRow);
+
+        row.appendChild(pos);
+        row.appendChild(escudo);
+        row.appendChild(teamInfo);
+        container.appendChild(row);
+      });
+
+      atualizarOrdemTimes();
+      atualizarTeclasTimes();
+      
+      // Sincronizar fotos dos inputs com os times atuais
+      sincronizarFotosInputs();
+      
+      // Adicionar eventos de clique nos escudos
+      adicionarEventosCliqueEscudos();
+      
+      // Adicionar eventos de clique nas moedas
+      adicionarEventosCliqueMoedas();
+    }
+
+    // Substituir último time (8º colocado)
+    document.getElementById('btnSubstituirUltimo').onclick = function () {
+      const file = selectTimeNovo.value;
+      const nome = nomeTimeFromFile(file);
+      // Seleciona o último time (8º colocado)
+      const container = document.querySelector('.ranking-container');
+      const rows = Array.from(container.querySelectorAll('.team-row'));
+      if (rows.length === 0) return;
+      const ultimo = rows[rows.length - 1];
+      // Atualiza escudo
+      const escudo = ultimo.querySelector('.escudo');
+      escudo.src = `escudos/${file}`;
+      escudo.alt = nome;
+      // Atualiza nome
+      const nomeSpan = ultimo.querySelector('.team-nome');
+      nomeSpan.childNodes[0].textContent = nome + ' ';
+      // Mantém o presente atual
+      // Atualiza gols
+      const golsSpan = ultimo.querySelector('.gols');
+      golsSpan.textContent = '30 Moedas';
+      // Remove animação de gol
+      golsSpan.classList.remove('gol-anim');
+      // Atualiza id do gols
+      golsSpan.id = 'gols-' + nome.toLowerCase().replace(/ /g, '-');
+      // Atualiza id da row
+      ultimo.id = nome.toLowerCase().replace(/ /g, '-') + '-row';
+      
+      // Reordena
+      atualizarOrdemTimes();
+      atualizarTeclasTimes();
+      sincronizarFotosInputs();
+      salvarAoAlterar();
+    };
+    // Botão de resetar gols
+    document.getElementById('btnResetarGols').onclick = function () {
+      if (!confirm('Tem certeza que deseja zerar os gols de todos os times?')) return;
+
+      document.querySelectorAll('.team-row .gols').forEach(golsSpan => {
+        golsSpan.textContent = utils.formatarGols(0);
+      });
+
+      atualizarOrdemTimes();
+      salvarTabelaNoStorage();
+    };
+    // Função para adicionar gols ao time específico do input
+    function adicionarGolsPresente(presente, inputId) {
+      const valor = parseInt(document.getElementById(inputId).value, 10) || 0;
+      if (valor <= 0) return;
+
+      // Encontrar o time específico baseado na foto do input
+      const input = document.getElementById(inputId);
+      const inputImg = input.parentElement.querySelector('img');
+      const escudoInputSrc = inputImg.src.split('/').pop();
+
+      const row = Array.from(document.querySelectorAll('.team-row')).find(row => {
+        const escudo = row.querySelector('.escudo');
+        const presenteImg = row.querySelector('.presente-time');
+        return escudo && presenteImg && 
+               escudo.src.includes(escudoInputSrc) && 
+               presenteImg.src.includes(presente);
+      });
+
+      if (row) {
+        const golsSpan = row.querySelector('.gols');
+        const golsAtuais = utils.extrairGols(golsSpan.textContent);
+        golsSpan.textContent = utils.formatarGols(golsAtuais + valor);
+
+        atualizarOrdemTimes();
+        salvarTabelaNoStorage();
+      }
+    }
+
+    // Função para adicionar gols diretamente ao time
+    function adicionarGolsTime(nomeTime, inputId) {
+      const valor = parseInt(document.getElementById(inputId).value, 10) || 0;
+      if (valor <= 0) return;
+
+      const row = Array.from(document.querySelectorAll('.team-row')).find(row => {
+        const nomeSpan = row.querySelector('.team-nome');
+        return nomeSpan && nomeSpan.childNodes[0].textContent.trim() === nomeTime;
+      });
+
+      if (row) {
+        const golsSpan = row.querySelector('.gols');
+        const golsAtuais = utils.extrairGols(golsSpan.textContent);
+        golsSpan.textContent = utils.formatarGols(golsAtuais + valor);
+
+        atualizarOrdemTimes();
+        salvarTabelaNoStorage();
+      }
+    }
+    document.getElementById('btn-casquinha').onclick = function () { adicionarGolsPresente('casquinha.webp', 'input-casquinha'); };
+    document.getElementById('btn-rosa').onclick = function () { adicionarGolsPresente('rosa.webp', 'input-rosa'); };
+    document.getElementById('btn-branca').onclick = function () { adicionarGolsPresente('branca.webp', 'input-branca'); };
+    document.getElementById('btn-tiktok').onclick = function () { adicionarGolsPresente('tiktok.webp', 'input-tiktok'); };
+    document.getElementById('btn-gg').onclick = function () { adicionarGolsPresente('gg.webp', 'input-gg'); };
+    document.getElementById('btn-rosquinha').onclick = function () { adicionarGolsPresente('rosquinha.webp', 'input-rosquinha'); };
+    document.getElementById('btn-verde').onclick = function () { adicionarGolsPresente('verde.webp', 'input-verde'); };
+    document.getElementById('btn-rosquinha2').onclick = function () { adicionarGolsPresente('rosquinha.webp', 'input-rosquinha2'); };
+    // Atualiza o mapeamento das teclas ao carregar
+    atualizarTeclasTimes();
+    // Restaurar tabela do localStorage ao carregar a página
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DOM carregado');
+      console.log('Times existentes antes:', document.querySelectorAll('.team-row').length);
+
+      // Tenta restaurar do localStorage
+      try {
+        restaurarTabelaDoStorage();
+        console.log('Times após restaurar:', document.querySelectorAll('.team-row').length);
+      } catch (error) {
+        console.error('Erro ao restaurar:', error);
+      }
+
+      // Se não há 8 times, cria os times padrão
+      if (document.querySelectorAll('.team-row').length < 8) {
+        console.log('Menos de 8 times encontrados, criando padrão...');
+        try {
+          criarTimesPadrao();
+          console.log('Times padrão criados com sucesso');
+        } catch (error) {
+          console.error('Erro ao criar times padrão:', error);
+        }
+      } else {
+        console.log('Já existem 8 times, não criando padrão');
+      }
+
+      console.log('Estado final - Times na tela:', document.querySelectorAll('.team-row').length);
+      
+      // Iniciar troca automática do último time a cada 1 minuto
+      setInterval(trocarUltimoTimeAutomaticamente, 60000); // 60000ms = 1 minuto
+      console.log('Sistema de troca automática iniciado - troca a cada 1 minuto');
+      
+      // Adicionar evento de clique nos escudos dos times
+      adicionarEventosCliqueEscudos();
+      
+      // Adicionar evento de clique nas moedas dos times
+      adicionarEventosCliqueMoedas();
+      
+      // Iniciar o hino automaticamente
+      tocarHinoPrimeiro();
+    });
+    
+    // Função para adicionar eventos de clique nos escudos
+    function adicionarEventosCliqueEscudos() {
+      // Remover todos os event listeners existentes primeiro
+      document.querySelectorAll('.escudo').forEach(escudo => {
+        escudo.replaceWith(escudo.cloneNode(true));
+      });
+      
+      // Adicionar novos event listeners
+      document.querySelectorAll('.escudo').forEach(escudo => {
+        escudo.style.cursor = 'pointer';
+        let intervalId = null;
+        
+        // Função para adicionar gol
+        function adicionarGol() {
+          const row = escudo.closest('.team-row');
+          if (row) {
+            const golsSpan = row.querySelector('.gols');
+            if (golsSpan) {
+              const gols = utils.extrairGols(golsSpan.textContent);
+              golsSpan.textContent = utils.formatarGols(gols + 1);
+              
+              // Efeito visual de gol
+              golsSpan.style.background = '#39ff14';
+              setTimeout(() => {
+                golsSpan.style.background = '';
+              }, 100);
+              
+              atualizarOrdemTimes();
+              salvarTabelaNoStorage();
+            }
+          }
+        }
+        
+        // Clique simples - adiciona 1 gol
+        escudo.addEventListener('click', adicionarGol);
+        
+        // Mouse down - inicia adição contínua
+        escudo.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          adicionarGol(); // Primeiro gol imediatamente
+          
+          // Depois adiciona gols a cada 50ms (20 gols por segundo)
+          intervalId = setInterval(adicionarGol, 50);
+        });
+        
+        // Mouse up - para a adição contínua
+        escudo.addEventListener('mouseup', function() {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+        });
+        
+        // Mouse leave - para a adição contínua se o mouse sair
+        escudo.addEventListener('mouseleave', function() {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+        });
+      });
+    }
+    
+    // Função para adicionar eventos de clique nas moedas dos times
+    function adicionarEventosCliqueMoedas() {
+      // Remover todos os event listeners existentes primeiro
+      document.querySelectorAll('.coin').forEach(coin => {
+        coin.replaceWith(coin.cloneNode(true));
+      });
+      
+      // Adicionar novos event listeners
+      document.querySelectorAll('.coin').forEach(coin => {
+        coin.style.cursor = 'pointer';
+        coin.addEventListener('click', function() {
+          const row = this.closest('.team-row');
+          if (row) {
+            const nomeSpan = row.querySelector('.team-nome');
+            const nomeTime = nomeSpan.childNodes[0].textContent.trim();
+            const nomeArquivo = nomeTime.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g, '').replace(/ /g, '-');
+            
+            // Remove o gif de fundo
+            document.body.style.background = 'none';
+            
+            // Cria ou obtém o vídeo de fundo
+            let videoFundo = document.getElementById('video-fundo');
+            if (!videoFundo) {
+              videoFundo = document.createElement('video');
+              videoFundo.id = 'video-fundo';
+              videoFundo.style.position = 'fixed';
+              videoFundo.style.top = '50%';
+              videoFundo.style.left = '50%';
+              videoFundo.style.transform = 'translate(-50%, -50%)';
+              videoFundo.style.width = '90%';
+              videoFundo.style.height = '90%';
+              videoFundo.style.objectFit = 'contain';
+              videoFundo.style.zIndex = '-1';
+              videoFundo.style.pointerEvents = 'none';
+              document.body.appendChild(videoFundo);
+            }
+            
+            // Configura e reproduz o vídeo
+            videoFundo.src = 'videos/' + nomeArquivo + '.mp4';
+            videoFundo.currentTime = 0;
+            videoFundo.play();
+            
+            // Restaura o gif quando o vídeo terminar
+            videoFundo.addEventListener('ended', function () {
+              document.body.style.background = "url('gif/drible.gif') no-repeat center center fixed";
+              document.body.style.backgroundSize = 'cover';
+              if (videoFundo.parentNode) {
+                videoFundo.parentNode.removeChild(videoFundo);
+              }
+            }, { once: true });
+          }
+        });
+      });
+    }
+    document.getElementById('btnMostrarCampeao').onclick = function () {
+      const row = document.querySelector('.ranking-container .team-row');
+      if (!row) return;
+
+      const escudo = row.querySelector('.escudo');
+      const nome = row.querySelector('.team-nome').childNodes[0].textContent.trim();
+      const nomeArquivo = utils.normalizarNome(nome);
+
+      // Exibe modal
+      document.getElementById('escudo-campeao').src = escudo.src;
+      document.getElementById('nome-campeao').textContent = nome;
+      document.getElementById('modal-campeao').style.display = 'flex';
+
+      // Toca hino
+      const audio = document.getElementById('audio-hino-campeao');
+      audio.src = `hinos/${nomeArquivo}.mp3`;
+      audio.currentTime = 0;
+      audio.play();
+    };
+    // Fechar modal
+    document.getElementById('fechar-campeao').onclick = function () {
+      document.getElementById('modal-campeao').style.display = 'none';
+      const audio = document.getElementById('audio-hino-campeao');
+      audio.pause();
+      audio.currentTime = 0;
+    };
+
+    // Modo Hino
+    let modoHinoAtivo = true; // Sempre ativado por padrão
+    let ultimoPrimeiroId = null;
+    const btnModoHino = document.getElementById('btnModoHino');
+    const audioModoHino = document.getElementById('audio-hino-modo');
+    
+    // Configurar botão como ativado desde o início
+    btnModoHino.style.background = '#39ff14';
+    btnModoHino.style.color = '#111';
+
+    function tocarHinoPrimeiro() {
+      const container = document.querySelector('.ranking-container');
+      const row = container.querySelector('.team-row');
+      if (!row) return;
+      const nomeSpan = row.querySelector('.team-nome');
+      let nome = nomeSpan ? nomeSpan.childNodes[0].textContent.trim() : '';
+      let nomeArquivo = nome.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g, '').replace(/ /g, '-');
+      if (nomeArquivo === 'juventude') nomeArquivo = 'juventude';
+      audioModoHino.src = 'hinos/' + nomeArquivo + '.mp3';
+      audioModoHino.currentTime = 0;
+      audioModoHino.play();
+      ultimoPrimeiroId = row.id;
+    }
+
+    function pararHinoPrimeiro() {
+      audioModoHino.pause();
+      audioModoHino.currentTime = 0;
+      ultimoPrimeiroId = null;
+    }
+
+    btnModoHino.onclick = function () {
+      modoHinoAtivo = !modoHinoAtivo;
+      if (modoHinoAtivo) {
+        btnModoHino.style.background = '#39ff14';
+        btnModoHino.style.color = '#111';
+        tocarHinoPrimeiro();
+      } else {
+        btnModoHino.style.background = '#222';
+        btnModoHino.style.color = '#39ff14';
+        pararHinoPrimeiro();
+      }
+    };
+
+    // Monitorar mudanças no primeiro colocado
+    const observer = new MutationObserver(() => {
+      if (!modoHinoAtivo) return;
+      const container = document.querySelector('.ranking-container');
+      const row = container.querySelector('.team-row');
+      if (!row) return;
+      if (row.id !== ultimoPrimeiroId) {
+        pararHinoPrimeiro();
+        tocarHinoPrimeiro();
+      }
+    });
+    observer.observe(document.querySelector('.ranking-container'), { childList: true, subtree: true });
+
+    // Função utilitária para normalizar nome do time para arquivo de vídeo
+    function nomeArquivoVideo(nome) {
+      return nome.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g, '').replace(/ /g, '-');
+    }
+
+    // Função para abrir vídeo do time do presente
+    function abrirVideoPresente(presente) {
+      const container = document.querySelector('.ranking-container');
+      const rows = Array.from(container.querySelectorAll('.team-row'));
+      let nomeTime = null;
+      rows.forEach(row => {
+        const presenteImg = row.querySelector('.presente-time');
+        if (presenteImg && presenteImg.src.includes(presente)) {
+          const nomeSpan = row.querySelector('.team-nome');
+          nomeTime = nomeSpan.childNodes[0].textContent.trim();
+        }
+      });
+      if (!nomeTime) {
+        alert('Nenhum time com esse presente no momento!');
+        return;
+      }
+
+      const nomeArq = nomeArquivoVideo(nomeTime);
+
+      // Remove o gif de fundo
+      document.body.style.background = 'none';
+
+      // Cria ou obtém o vídeo de fundo
+      let videoFundo = document.getElementById('video-fundo');
+      if (!videoFundo) {
+        videoFundo = document.createElement('video');
+        videoFundo.id = 'video-fundo';
+        videoFundo.style.position = 'fixed';
+        videoFundo.style.top = '50%';
+        videoFundo.style.left = '50%';
+        videoFundo.style.transform = 'translate(-50%, -50%)';
+        videoFundo.style.width = '90%';
+        videoFundo.style.height = '90%';
+        videoFundo.style.objectFit = 'contain';
+        videoFundo.style.zIndex = '-1';
+        videoFundo.style.pointerEvents = 'none';
+        document.body.appendChild(videoFundo);
+      }
+
+      // Configura e reproduz o vídeo
+      videoFundo.src = 'videos/' + nomeArq + '.mp4';
+      videoFundo.currentTime = 0;
+      videoFundo.play();
+
+      // Restaura o gif quando o vídeo terminar
+      videoFundo.addEventListener('ended', function () {
+        document.body.style.background = "url('gif/drible.gif') no-repeat center center fixed";
+        document.body.style.backgroundSize = 'cover';
+        if (videoFundo.parentNode) {
+          videoFundo.parentNode.removeChild(videoFundo);
+        }
+      }, { once: true });
+    }
+
+    // Função para abrir vídeo do time diretamente
+    function abrirVideoTime(nomeTime) {
+      const nomeArq = nomeArquivoVideo(nomeTime);
+
+      // Remove o gif de fundo
+      document.body.style.background = 'none';
+
+      // Cria ou obtém o vídeo de fundo
+      let videoFundo = document.getElementById('video-fundo');
+      if (!videoFundo) {
+        videoFundo = document.createElement('video');
+        videoFundo.id = 'video-fundo';
+        videoFundo.style.position = 'fixed';
+        videoFundo.style.top = '50%';
+        videoFundo.style.left = '50%';
+        videoFundo.style.transform = 'translate(-50%, -50%)';
+        videoFundo.style.width = '90%';
+        videoFundo.style.height = '90%';
+        videoFundo.style.objectFit = 'contain';
+        videoFundo.style.zIndex = '-1';
+        videoFundo.style.pointerEvents = 'none';
+        document.body.appendChild(videoFundo);
+      }
+
+      // Configura e reproduz o vídeo
+      videoFundo.src = 'videos/' + nomeArq + '.mp4';
+      videoFundo.currentTime = 0;
+      videoFundo.play();
+
+      // Restaura o gif quando o vídeo terminar
+      videoFundo.addEventListener('ended', function () {
+        document.body.style.background = "url('gif/drible.gif') no-repeat center center fixed";
+        document.body.style.backgroundSize = 'cover';
+        if (videoFundo.parentNode) {
+          videoFundo.parentNode.removeChild(videoFundo);
+        }
+      }, { once: true });
+    }
+
+    // Eventos dos botões de vídeo dos presentes
+    document.getElementById('btn-video-casquinha').onclick = function () { abrirVideoPresente('casquinha.webp'); };
+    document.getElementById('btn-video-rosa').onclick = function () { abrirVideoPresente('rosa.webp'); };
+    document.getElementById('btn-video-branca').onclick = function () { abrirVideoPresente('branca.webp'); };
+    document.getElementById('btn-video-tiktok').onclick = function () { abrirVideoPresente('tiktok.webp'); };
+    document.getElementById('btn-video-gg').onclick = function () { abrirVideoPresente('gg.webp'); };
+    document.getElementById('btn-video-rosquinha').onclick = function () { abrirVideoPresente('rosquinha.webp'); };
+    document.getElementById('btn-video-verde').onclick = function () { abrirVideoPresente('verde.webp'); };
+    document.getElementById('btn-video-rosquinha2').onclick = function () { abrirVideoPresente('rosquinha.webp'); };
+    // Fechar modal de vídeo
+    document.getElementById('fechar-video-time').onclick = function () {
+      document.getElementById('modal-video-time').style.display = 'none';
+      const video = document.getElementById('video-time');
+      video.pause();
+      video.currentTime = 0;
+    };
+    // Fechar automaticamente o modal quando o vídeo terminar
+    document.getElementById('video-time').addEventListener('ended', function () {
+      document.getElementById('modal-video-time').style.display = 'none';
+      this.pause();
+      this.currentTime = 0;
+    });
+
+    // Função para exibir texto do presente ao lado dos gols
+    function setTextoPresenteNaColuna(presente, texto) {
+      const container = document.querySelector('.ranking-container');
+      const rows = Array.from(container.querySelectorAll('.team-row'));
+      rows.forEach(row => {
+        const presenteImg = row.querySelector('.presente-time');
+        // Remove texto antigo se existir
+        const textoAntigo = row.querySelector('.texto-presente-extra');
+        if (textoAntigo) textoAntigo.remove();
+        if (presenteImg && presenteImg.src.includes(presente)) {
+          // Adiciona novo texto
+          const golsRow = row.querySelector('.gols-row');
+          if (golsRow) {
+            const span = document.createElement('span');
+            span.className = 'texto-presente-extra';
+            span.textContent = texto;
+            span.style.marginLeft = '12px';
+            span.style.display = 'inline-block';
+            span.style.fontSize = '0.95em';
+            span.style.color = '#b366ff'; // roxo
+            span.style.fontWeight = 'bold';
+            span.style.position = 'relative';
+            span.style.top = '8px';
+            span.style.fontFamily = "'Rhesmanisa', cursive";
+            golsRow.appendChild(span);
+          }
+        }
+      });
+    }
+    
+    // Inicializar configurações mobile
+    document.addEventListener('DOMContentLoaded', function() {
+      // Registrar service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW registrado:', registration);
+          })
+          .catch(error => {
+            console.log('Erro ao registrar SW:', error);
+          });
+      }
+      
+      // Aplicar configurações mobile
+      if (typeof applyMobileConfig === 'function') {
+        applyMobileConfig();
+      }
+      
+      // Ajustar UI para mobile
+      if (typeof adjustUIForMobile === 'function') {
+        adjustUIForMobile();
+      }
+    });
+  </script>
+  
+  <!-- Mobile Config -->
+  <script src="mobile-config.js"></script>
+</body>
+
+</html>
