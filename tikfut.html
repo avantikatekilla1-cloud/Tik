@@ -1357,9 +1357,8 @@
         // Mouse down - inicia adição contínua
         escudo.addEventListener('mousedown', function(e) {
           e.preventDefault();
-          adicionarGol(); // Primeiro gol imediatamente
           
-          // Depois adiciona gols a cada 50ms (20 gols por segundo)
+          // Adiciona gols a cada 50ms (20 gols por segundo)
           intervalId = setInterval(adicionarGol, 50);
         });
         
