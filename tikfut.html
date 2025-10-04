@@ -783,18 +783,7 @@
         }
       });
 
-      // Efeito de ultrapassagem
-      const novaOrdem = rows.map(row => row.id);
-      novaOrdem.forEach((id, idx) => {
-        const idxAntigo = ordemAntiga.indexOf(id);
-        if (idxAntigo > idx) {
-          const row = document.getElementById(id);
-          if (row) {
-            row.style.background = '#39ff14';
-            setTimeout(() => row.style.background = '', CONFIG.ANIMACAO_DURACAO);
-          }
-        }
-      });
+      // Efeito de ultrapassagem removido
 
       // Reanexa na ordem correta
       rows.forEach(row => container.appendChild(row));
@@ -1339,12 +1328,6 @@
               const gols = utils.extrairGols(golsSpan.textContent);
               golsSpan.textContent = utils.formatarGols(gols + 1);
               
-              // Efeito visual de gol
-              golsSpan.style.background = '#39ff14';
-              setTimeout(() => {
-                golsSpan.style.background = '';
-              }, 100);
-              
               atualizarOrdemTimes();
               salvarTabelaNoStorage();
             }
@@ -1387,7 +1370,12 @@
         coin.replaceWith(coin.cloneNode(true));
       });
       
-      // Adicionar novos event listeners
+      // Remover todos os event listeners existentes do texto de gols
+      document.querySelectorAll('.gols').forEach(gols => {
+        gols.replaceWith(gols.cloneNode(true));
+      });
+      
+      // Adicionar novos event listeners para as moedas (vídeo)
       document.querySelectorAll('.coin').forEach(coin => {
         coin.style.cursor = 'pointer';
         coin.addEventListener('click', function() {
@@ -1430,6 +1418,21 @@
                 videoFundo.parentNode.removeChild(videoFundo);
               }
             }, { once: true });
+          }
+        });
+      });
+      
+      // Adicionar event listeners para o texto de gols (adiciona 100 gols)
+      document.querySelectorAll('.gols').forEach(gols => {
+        gols.style.cursor = 'pointer';
+        gols.addEventListener('click', function() {
+          const row = this.closest('.team-row');
+          if (row) {
+            const golsAtuais = utils.extrairGols(this.textContent);
+            this.textContent = utils.formatarGols(golsAtuais + 100);
+            
+            atualizarOrdemTimes();
+            salvarTabelaNoStorage();
           }
         });
       });
